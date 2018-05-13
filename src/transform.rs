@@ -1,19 +1,19 @@
 use cgmath::Vector2;
 
 pub struct Transform {
-    pub pos: Vector2<f64>,
-    pub size: Vector2<f64>,
-    pub pivot: Vector2<f64>,
+    pub pos: Vector2<f32>,
+    pub size: Vector2<f32>,
+    pub pivot: Vector2<f32>,
 }
 
 impl Transform {
-    pub fn contains(&self, point: Vector2<f64>) -> bool {
+    pub fn contains(&self, point: Vector2<f32>) -> bool {
         let bottom_left = self.bottom_left();
         bottom_left.x <= point.x && point.x <= bottom_left.x + self.size.x &&
             bottom_left.y <= point.y && point.y <= bottom_left.y + self.size.y
     }
 
-    pub fn bottom_left(&self) -> Vector2<f64> {
+    pub fn bottom_left(&self) -> Vector2<f32> {
         Vector2 {
             x: self.pos.x - (self.pivot.x * self.size.x),
             y: self.pos.y - (self.pivot.y * self.size.y),

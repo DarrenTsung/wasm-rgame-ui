@@ -20,7 +20,7 @@ pub struct Button {
     transform: Transform,
     config: ButtonConfig,
     state: Rc<RefCell<ButtonState>>,
-    mouse_position: Vector2<f64>,
+    mouse_position: Vector2<f32>,
 }
 
 #[derive(Clone)]
@@ -62,13 +62,13 @@ impl Delegate for Button {
     )
     {
         let hovered = self.transform.contains(Vector2 {
-            x: mouse_manager.pos_x.into(),
-            y: mouse_manager.pos_y.into(),
+            x: mouse_manager.pos_x,
+            y: mouse_manager.pos_y,
         });
 
         self.mouse_position = Vector2 {
-            x: mouse_manager.pos_x.into(),
-            y: mouse_manager.pos_y.into(),
+            x: mouse_manager.pos_x,
+            y: mouse_manager.pos_y,
         };
 
         let prev_clicked_in = (*self.state.borrow()).clicked_in;
@@ -99,18 +99,18 @@ impl Delegate for Button {
         };
 
         graphics.draw_rect(
-            bottom_left.x as i32,
-            bottom_left.y as i32,
-            size.x as u16,
-            size.y as u16,
+            bottom_left.x,
+            bottom_left.y,
+            size.x,
+            size.y,
             color,
         );
 
         graphics.draw_rect(
-            self.mouse_position.x as i32,
-            self.mouse_position.y as i32,
-            10,
-            10,
+            self.mouse_position.x,
+            self.mouse_position.y,
+            10.0,
+            10.0,
             [0, 0, 0, 255],
         );
     }
