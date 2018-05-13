@@ -1,0 +1,8 @@
+[package]
+name = "wasm-rgame-ui"
+version = "0.1.0"
+authors = ["Darren Tsung <darren@onesignal.com>"]
+
+[dependencies]
+wasm-rgame = { path = "../wasm-rgame" }
+cgmath = "0.16"
