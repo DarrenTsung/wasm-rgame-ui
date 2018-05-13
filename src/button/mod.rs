@@ -20,7 +20,6 @@ pub struct Button {
     transform: Transform,
     config: ButtonConfig,
     state: Rc<RefCell<ButtonState>>,
-    mouse_position: Vector2<f32>,
 }
 
 #[derive(Clone)]
@@ -47,7 +46,6 @@ impl Button {
                     clicked: false,
                 }
             )),
-            mouse_position: Vector2 { x: 0.0, y: 0.0, },
         }
     }
 }
@@ -65,11 +63,6 @@ impl Delegate for Button {
             x: mouse_manager.pos_x,
             y: mouse_manager.pos_y,
         });
-
-        self.mouse_position = Vector2 {
-            x: mouse_manager.pos_x,
-            y: mouse_manager.pos_y,
-        };
 
         let prev_clicked_in = (*self.state.borrow()).clicked_in;
         let clicked = prev_clicked_in && mouse_manager.button_state(MouseButton::Left) == MouseButtonState::Up;
@@ -104,14 +97,6 @@ impl Delegate for Button {
             size.x,
             size.y,
             color,
-        );
-
-        graphics.draw_rect(
-            self.mouse_position.x,
-            self.mouse_position.y,
-            10.0,
-            10.0,
-            [0, 0, 0, 255],
         );
     }
 
