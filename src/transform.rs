@@ -6,6 +6,7 @@ pub enum TransformVector {
     Absolute(Vector2<f32>),
 }
 
+#[derive(Clone)]
 pub struct Transform {
     pub pos: Vector2<f32>,
     pub size: Vector2<f32>,
@@ -32,6 +33,10 @@ impl Transform {
             x: self.pos.x - (self.pivot.x * self.size.x),
             y: self.pos.y - (self.pivot.y * self.size.y),
         }
+    }
+
+    pub fn center(&self) -> Vector2<f32> {
+        self.bottom_left() + (self.size / 2.0)
     }
 }
 

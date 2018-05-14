@@ -6,20 +6,12 @@ use cgmath::Vector2;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use super::{Transform};
-
-/// Because fontSize / 2.0 doesn't aligned the font in the center,
-/// we use this magic variable to scale fontSize
-const FONT_SIZE_HEIGHT_RATIO: f32 = 0.5;
+use super::{Transform, TextConfig, Text};
 
 pub struct ButtonConfig {
     pub hovered_color: Color,
     pub clicked_color: Color,
     pub color: Color,
-
-    pub text: String,
-    pub font_size: f32,
-    pub text_color: Color,
 
     pub render_order: i32,
 }
@@ -28,6 +20,9 @@ pub struct Button {
     transform: Transform,
     config: ButtonConfig,
     state: Rc<RefCell<ButtonState>>,
+
+    text_config: Option<TextConfig>,
+    text_handle: Option<SpawnHandle<()>>,
 }
 
 #[derive(Clone)]
@@ -54,11 +49,28 @@ impl Button {
                     clicked: false,
                 }
             )),
+            text_config: None,
+            text_handle: None,
         }
+    }
+
+    pub fn set_text(&mut self, text_config: TextConfig) {
+        self.text_config = Some(text_config);
     }
 }
 
 impl Delegate for Button {
+    fn on_spawn(
+        &mut self,
+        delegate_spawner: &mut DelegateSpawner,
+    ) {
+        if let Some(text_config) = self.text_config.take() {
+            self.text_handle = Some(delegate_spawner.spawn(
+                Text::new(self.transform.clone(), text_config)
+            ));
+        }
+    }
+
     fn tick(
         &mut self,
         _context: &mut ApplicationContext,
@@ -105,14 +117,6 @@ impl Delegate for Button {
             size.x,
             size.y,
             color,
-        );
-
-        graphics.draw_string(
-            &self.config.text,
-            bottom_left.x + (size.x / 2.0),
-            bottom_left.y + (size.y / 2.0) - (self.config.font_size * FONT_SIZE_HEIGHT_RATIO / 2.0),
-            self.config.font_size,
-            self.config.text_color,
         );
     }
 
