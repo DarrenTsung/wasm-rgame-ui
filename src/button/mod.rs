@@ -8,10 +8,18 @@ use std::rc::Rc;
 
 use super::{Transform};
 
+/// Because fontSize / 2.0 doesn't aligned the font in the center,
+/// we use this magic variable to scale fontSize
+const FONT_SIZE_HEIGHT_RATIO: f32 = 0.5;
+
 pub struct ButtonConfig {
     pub hovered_color: Color,
     pub clicked_color: Color,
     pub color: Color,
+
+    pub text: String,
+    pub font_size: f32,
+    pub text_color: Color,
 
     pub render_order: i32,
 }
@@ -97,6 +105,14 @@ impl Delegate for Button {
             size.x,
             size.y,
             color,
+        );
+
+        graphics.draw_string(
+            &self.config.text,
+            bottom_left.x + (size.x / 2.0),
+            bottom_left.y + (size.y / 2.0) - (self.config.font_size * FONT_SIZE_HEIGHT_RATIO / 2.0),
+            self.config.font_size,
+            self.config.text_color,
         );
     }
 
