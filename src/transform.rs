@@ -1,4 +1,10 @@
 use cgmath::Vector2;
+use wasm_rgame::CANVAS;
+
+pub enum TransformVector {
+    Relative(Vector2<f32>),
+    Absolute(Vector2<f32>),
+}
 
 pub struct Transform {
     pub pos: Vector2<f32>,
@@ -7,6 +13,14 @@ pub struct Transform {
 }
 
 impl Transform {
+    pub fn new(pos: TransformVector, size: TransformVector, pivot: Vector2<f32>) -> Transform {
+        Transform {
+            pos: pos.into_absolute(),
+            size: size.into_absolute(),
+            pivot,
+        }
+    }
+
     pub fn contains(&self, point: Vector2<f32>) -> bool {
         let bottom_left = self.bottom_left();
         bottom_left.x <= point.x && point.x <= bottom_left.x + self.size.x &&
@@ -17,6 +31,20 @@ impl Transform {
         Vector2 {
             x: self.pos.x - (self.pivot.x * self.size.x),
             y: self.pos.y - (self.pivot.y * self.size.y),
+        }
+    }
+}
+
+impl TransformVector {
+    fn into_absolute(self) -> Vector2<f32> {
+        match self {
+            TransformVector::Absolute(vec) => vec,
+            TransformVector::Relative(vec) => {
+                Vector2 {
+                    x: vec.x * (CANVAS.width() as f32),
+                    y: vec.y * (CANVAS.height() as f32),
+                }
+            }
         }
     }
 }

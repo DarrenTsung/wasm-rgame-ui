@@ -5,5 +5,5 @@ mod button;
 mod transform;
 
 pub use button::{ButtonConfig, Button, ButtonHandle};
-pub use transform::Transform;
+pub use transform::{TransformVector, Transform};
 pub use cgmath::Vector2;
