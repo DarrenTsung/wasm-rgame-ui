@@ -1,5 +1,5 @@
 use cgmath::Vector2;
-use wasm_rgame::CANVAS;
+use wasm_rgame::Canvas;
 
 pub enum TransformVector {
     Relative(Vector2<f32>),
@@ -45,9 +45,10 @@ impl TransformVector {
         match self {
             TransformVector::Absolute(vec) => vec,
             TransformVector::Relative(vec) => {
+                let canvas = Canvas::instance();
                 Vector2 {
-                    x: vec.x * (CANVAS.width() as f32),
-                    y: vec.y * (CANVAS.height() as f32),
+                    x: vec.x * (canvas.width() as f32),
+                    y: vec.y * (canvas.height() as f32),
                 }
             }
         }

@@ -34,7 +34,7 @@ impl Delegate for Text {
         &mut self,
         _context: &mut ApplicationContext,
         _key_manager: &KeyManager,
-        _mouse_manager: &MouseManager,
+        _mouse_state: &MouseState,
         _delegate_spawner: &mut DelegateSpawner,
     ) {}
 

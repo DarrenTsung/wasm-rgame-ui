@@ -1,4 +1,3 @@
-use wasm_rgame::{MouseButton, MouseButtonState};
 use wasm_rgame::Color;
 use wasm_rgame::delegate_prelude::*;
 
@@ -75,24 +74,24 @@ impl Delegate for Button {
         &mut self,
         _context: &mut ApplicationContext,
         _key_manager: &KeyManager,
-        mouse_manager: &MouseManager,
+        mouse_state: &MouseState,
         _delegate_spawner: &mut DelegateSpawner,
     )
     {
         let hovered = self.transform.contains(Vector2 {
-            x: mouse_manager.pos_x,
-            y: mouse_manager.pos_y,
+            x: mouse_state.pos_x,
+            y: mouse_state.pos_y,
         });
 
         let prev_clicked_in = (*self.state.borrow()).clicked_in;
-        let clicked = prev_clicked_in && mouse_manager.button_state(MouseButton::Left) == MouseButtonState::Up;
+        let clicked = prev_clicked_in && mouse_state.button_up(MouseButton::Left);
         let clicked_in = if prev_clicked_in {
             // stay clicked in if mouse is still in button transform,
             // if clicked then no longer clicked_in
             hovered && !clicked
         } else {
             // become clicked_in if mouse down in button transform
-            hovered && mouse_manager.button_state(MouseButton::Left) == MouseButtonState::Down
+            hovered && mouse_state.button_down(MouseButton::Left)
         };
 
         self.state.replace(ButtonState { hovered, clicked_in, clicked, });
